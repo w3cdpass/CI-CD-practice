@@ -1,21 +1,21 @@
-name: Deploying a static site
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main"] # Runs when you push to main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # Allows action to create gh-pages branch
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to Github Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
         with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./index.html
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./ # Deploys the ENTIRE repo
