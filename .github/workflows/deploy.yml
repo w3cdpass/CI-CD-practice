@@ -29,5 +29,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist  # Vite's default build folder
+          publish_dir: ./dist
+          destination_dir: ./CI-CD-practice  # Vite's default build folder
           force_orphan: true   # Ensures a clean gh-pages branch
