@@ -7,9 +7,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     permissions:
-      contents: write # Allows gh-pages branch creation
+      contents: write  # Required to push to gh-pages
 
     steps:
       - name: Checkout code
@@ -30,4 +29,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist 
+          publish_dir: ./dist  # Vite's default build folder
+          force_orphan: true   # Ensures a clean gh-pages branch
