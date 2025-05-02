@@ -1,44 +1,57 @@
-name: Deploy to GitHub Pages
+name: CI/CD Pipeline
 
 on:
   push:
     branches: ["main"]
     paths:
-      - "**/*.js"
-      - "**/*.vue"
-      - "**/*.ts"
+      - "src/**"
+      - "public/**"
       - "package.json"
-      - "package-lock.json"
+      - "vite.config.js"
 
 jobs:
   lint:
+    name: Lint Code
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
-      - run: npm ci
-      - run: npm run lint
+      
+      - name: Install Dependencies
+        run: npm ci
+      
+      - name: Run Linter
+        run: npm run lint
 
-  deploy:
-    needs: lint  # This ensures lint runs first
+  build-and-deploy:
+    name: Build and Deploy
+    needs: lint  # Waits for lint to complete successfully
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      
+    
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
-      - run: npm ci
-      - run: npm run build
-      - name: Deploy
+      
+      - name: Install and Build
+        run: |
+          npm ci
+          npm run build
+      
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          keep_files: false  # Cleans previous deployment
+          keep_files: false  # Clean deployment every time
