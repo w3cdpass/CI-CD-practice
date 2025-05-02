@@ -19,6 +19,7 @@ jobs:
       - run: npm run lint
 
   deploy:
+    needs: lint
     runs-on: ubuntu-latest
     permissions:
       contents: write # Allows action to create gh-pages branch

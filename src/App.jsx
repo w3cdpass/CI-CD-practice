@@ -15,7 +15,7 @@ function App() {
         <a href="https://react.dev" target="_blank">
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
-        {gamer}
+        
       </div>
       <h1>Vite + React</h1>
       <div className="card">
@@ -23,6 +23,7 @@ function App() {
           count is {count}
         </button>
         <p>
+          {heelog.gamer}
           Edit <code>src/App.jsx</code> and save to test HMR
         </p>
       </div>
