@@ -2,11 +2,14 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["main"] # Runs when you push to main
+    branches: ["main"]
     paths:
       - "**/*.js"
       - "**/*.vue"
+      - "**/*.ts"
       - "package.json"
+      - "package-lock.json"
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -15,32 +18,27 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm install
+          cache: 'npm'
+      - run: npm ci
       - run: npm run lint
 
   deploy:
+    needs: lint  # This ensures lint runs first
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Allows action to create gh-pages branch
-
+      contents: write
+      
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      # insrall node.js
-      - name: Setup node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      # install dependencies and build
-      - name: Install & build
-        run: |
-          npm install
-          npm run build
-
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist # Deploys the ENTIRE repo
+          publish_dir: ./dist
+          keep_files: false  # Cleans previous deployment
