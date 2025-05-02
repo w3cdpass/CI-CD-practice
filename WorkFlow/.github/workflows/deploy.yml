@@ -3,7 +3,10 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: ["main"] # Runs when you push to main
-
+    paths: 
+      - '**/*.js'
+      - '**/*.vue'
+      - 'package.json'
 jobs:
   deploy:
     runs-on: ubuntu-latest
