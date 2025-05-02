@@ -7,6 +7,7 @@ on:
       - "src/**"
       - "public/**"
       - "package.json"
+      - "package-lock.json"
       - "vite.config.js"
 
 jobs:
@@ -15,43 +16,53 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
-      
+          cache: "npm"
+
       - name: Install Dependencies
         run: npm ci
-      
+
       - name: Run Linter
         run: npm run lint
 
   build-and-deploy:
     name: Build and Deploy
-    needs: lint  # Waits for lint to complete successfully
+    needs: lint
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
-      
+          cache: "npm"
+
+      - name: Clean workspace
+        run: |
+          rm -rf dist/* || true
+
       - name: Install and Build
         run: |
           npm ci
           npm run build
-      
+
+      - name: Verify build output
+        run: |
+          ls -la dist/
+          [ -f dist/index.html ] || exit 1
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          keep_files: false  # Clean deployment every time
+          keep_files: false
+          force_orphan: false
