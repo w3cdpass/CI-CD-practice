@@ -23,7 +23,7 @@ function App() {
           count is {count}
         </button>
         <p>
-          {heelog.gamer}
+          {kjhgheelog.gamer}
           Edit <code>src/App.jsx</code> and save to test HMR
         </p>
       </div>
