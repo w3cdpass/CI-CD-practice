@@ -1,4 +1,4 @@
 import './style.css'
 
-const parent = document.querySelector('#app')
+document.querySelector('#app').innerHTML = "gamer pro max"
 
